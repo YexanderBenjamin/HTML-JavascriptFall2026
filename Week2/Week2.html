@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Week 2 JavaScript Lab</title>
+        <meta charset="utf-8">
+        <meta name="viewpoint" content="width-device-width, initial-scale=1.0">
+        <style>
+            @font-face{
+                font-family: digital;
+                src: url(fonts/Matcha\ Style.ttf);
+            }
+            body{
+                   background-color: cornflowerblue;
+            }
+            #container{
+                width: 100%;
+                text-align: center;
+        
+            }
+            #output{
+                font-family: "digital";
+                color: green;
+                background-color:black;
+                font-size: 60px;
+                width: 100px;
+                margin-left: auto;
+                margin-right: auto;
+                border: 3px solid grey;
+        
+            }
+            h1,h2{
+                font-family: "slime";
+                font-weight: normal;
+                color: yellowgreen;
+            }
+                
+            #btn:hover{
+                transform: scale(1.05);
+            }
+            #btn:active{
+                transform: scale(0.9);
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Week 2 JavaScript Lab</h1>
+            <a href="../index.html">Link back to Main Page</a>
+            <span id="message"></span>
+            <hr>
+            <br>
+            <h2>Button Clicker</h2>
+            <h3 id="output">0</h3>
+            <button type="button" id="btn" style="background:none; border: none;">
+                <img src="Images/buttonclicker.png" alt="button image" width="50">
+            </button>
+            <!-- <input type="button" value="Click Me!!" id="btn"> -->
+            <input type="button" value="Clear Clicks" id="btn-reset">
+        </div>
+        
+        <!-- Example Javascript -->
+         <script>
+            //This is the example JavaScript code
+            // var name = prompt("What is your name??");
+            // var firstnumber = prompt("Give me your first number");
+            // var secondnumber = prompt("Give me your second number");
+            // var value = firstnumber * secondnumber;
+            // var message = `Hello ${name}.
+            //      \nYour first number was:${firstnumber};
+            //      \nYour second number was:${secondnumber};
+            //      \nYour value is: ${value}
+            // console.log(message);
+            // document.getElementById("message").innerHTML = message;
+            // document.getElementById("message").style.color = "green";
+
+            //Button Clicker Game
+            var ClickerButton = document.querySelector("#btn");
+            var ClearButton = document.querySelector("#btn-reset");
+            var clickerOutput = document.querySelector("#output");
+            var clickerSound = new Audio("audio/button-3.mp3")
+
+            var numberOfClicks = 0;
+
+            ClickerButton.addEventListener("click", function(){
+                numberOfClicks++;
+                updateClickerDisplay();
+                clickerSound.currentTime = 0;
+                clickerSound.play();
+
+                if(numberOfClicks ==25){
+                    alert("You mdae 25 clicks!")
+                }
+            });
+
+            ClearButton.addEventListener("click", function(){
+                numberOfClicks = 0
+                updateClickerDisplay();
+            });
+
+            function updateClickerDisplay(){
+                clickerOutput.innerHTML = numberOfClicks;
+            }
+
+         </script>
+    </body>
+</html>
