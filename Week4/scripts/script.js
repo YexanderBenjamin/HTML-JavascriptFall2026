@@ -21,6 +21,21 @@ var acceleration = 0.5;
 var friction = 0.9;
 
 var score = 0;
+var starsHit = 0;
+
+var hitSound = new Audio("audio/button-3.mp3");
+var boxHitSound = new Audio("audio/explosion.mp3");
+
+function playSound(audio) 
+{
+    if (!audio) return;
+    audio.currentTime = 0;
+    try {
+        audio.play();
+    } catch (e) {
+       
+    }
+}
 
 function createStar(){
     var star = {
@@ -40,7 +55,7 @@ function createStar(){
 
 
 var starCount = 50;
-var stars = [];//Creates an array
+var stars = [];  //Creates an array
 
 for(var i = 0; i < starCount; i++){
     stars[i] = createStar();
@@ -60,18 +75,55 @@ var d = false;
 var w = false;
 var s = false;
 var space = false;
-<<<<<<< HEAD
-=======
 
 //Add a variable for the bullets
 var bullets = [];
-var shootCooldown = 0;
+var shootCooldown = 0;// ...existing code...
 
->>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
+function game(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
-//aslo add a varaible for the bullets.
-var bullets = [];
-var shootCooldown = 0;
+    if (!boxActive && Date.now() >= boxHiddenUntil) {
+        respawnBox();
+    }
+
+    if (boxActive) {
+        startPoint.x += moveDirection.x;
+        startPoint.y += moveDirection.y;
+
+        if(startPoint.y > canvas.height - 25 || startPoint.y < 0){
+            moveDirection.y *= -1;
+            boxColor = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+        }
+
+        if(startPoint.x > canvas.width - 25 || startPoint.x < 0){
+            moveDirection.x *= -1;
+            boxColor = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+        }
+    }
+
+    // ...existing code...
+
+    if (hitBox) {
+        bullets.splice(i, 1);
+
+        starsHit += 10;
+        playSound(boxHitSound);
+
+        hideBoxForDelay();
+        continue;
+    }
+
+    // ...existing code...
+
+    if (boxActive) {
+        ctx.fillStyle = boxColor;
+        ctx.fillRect(startPoint.x, startPoint.y, 25,25);
+    }
+
+    // ...existing code...
+}
+
 
 //on key pressed
 document.addEventListener("keydown", function(e){
@@ -88,14 +140,9 @@ document.addEventListener("keydown", function(e){
     if(e.key == "s"){
         s = true;
     }
-<<<<<<< HEAD
-     if(e.code == "Space"){
-        space = true;
-=======
     if(e.code === "Space"){
         space = true;
         e.preventDefault();
->>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
     }
 });
 //on key released
@@ -110,8 +157,8 @@ document.addEventListener("keyup", function(e){
     if(e.key == "w"){
         w = false;
     }
-    if(e.code == "Space"){
-        space = false;
+    if(e.key == "s"){
+        s = false;
     }
     if(e.code === "Space"){
         space = false;
@@ -192,26 +239,6 @@ function game(){
     shipSprite.x += shipSprite.moveX;
     shipSprite.y += shipSprite.moveY;
 
-<<<<<<< HEAD
-    //bullet firing code
-    if(shootCooldown > 0)
-    {
-        shootCooldown --;
-    }
-
-    if(space && shootCooldown ===0)
-        {
-            bullets.push{
-                x:shipSprite.x + 25 /2 -2,
-                y:shipSprite.y + -10;,
-                width:4
-                height:10
-                speed:9
-                color:"white"
-            };
-            shootCooldown = 10;
-        }
-=======
     //Bullet firing code
     if(shootCooldown > 0){
         shootCooldown--;
@@ -228,7 +255,6 @@ function game(){
         });
         shootCooldown = 10;
     }
->>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
 
     //Draws Background
     ctx.fillStyle = "black";
@@ -238,17 +264,14 @@ function game(){
         //draw all the stars
        
         //Collide with Star
-<<<<<<< HEAD
-        if(shipToStarCollision(stars[i])){
-=======
         if(shipToStarCollision(shipSprite, stars[i])){
->>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
             shipSprite.x = canvas.width/2
             shipSprite.y = canvas.height/2 + 100;
 
             shipSprite.moveX = 0;
             shipSprite.moveY = 0;
             score = 0;
+            starsHit = 0;
             //return;
         }
         stars[i].drawCircle();
@@ -260,54 +283,14 @@ function game(){
         }
     }
 
-<<<<<<< HEAD
-    for(var i = bullets.length -1; i >= 0; i--)
-        {
-            var bullet = bullets [i]
-
-            bullet.y -= bullet.speed;
-
-            //Check for bullets that leave the screen
-            if(bullet.y + bullet.height <0)
-                {
-                    bullet.splice(i,1);
-                    continue;
-                }
-
-                var hitBox = bullet.x < startPoint/x + 25 &&
-                             bullet.x + bullet.width > startPoint.x &&
-                             bullet.y < startPoint.y + 25 &&
-                             bullet.y + bullet.height > startPoint.y;
-
-            if(hitBox){
-            //remove bullet    
-                bullets.splice(i, 1);
-                startPoint.x = 100000
-                moveDirection.x = 0;
-                moveDirection.y = 0;
-                continue;
-            }
-            for(var j = 0; j<stars.length; j++){
-                if(shipToStarCollision(bullet, stars[j])){
-            stars[j].x = Math.random() * canvas.width;
-            stars[j].y = -(Math.random() * canvas.height);
-                }
-            }
-            ctx.fillStyle = bullet.color;
-            ctx.fillRect(bullet.x,bullet.height > startPoint.y)
-                
-        }
-
-=======
     //Draw and check for bullet collsion
-    for(var i = bullets.length -1; i>=0; i--){
+    for (var i = bullets.length - 1; i >= 0; i--) {
         var bullet = bullets[i];
 
         bullet.y -= bullet.speed;
 
-        //Check for bullets that leave the screen
-        if(bullet.y + bullet.height < 0){
-            bullets.splice(i,1);
+        if (bullet.y + bullet.height < 0) {
+            bullets.splice(i, 1);
             continue;
         }
 
@@ -316,20 +299,28 @@ function game(){
                     bullet.y < startPoint.y + 25 &&
                     bullet.y + bullet.height > startPoint.y;
 
-        if(hitBox){
-            //remove bullet
+        if (hitBox) {
             bullets.splice(i, 1);
-            startPoint.x = 100000;
-            moveDirection.x = 0;
-            moveDirection.y = 0;
+
+            // respawn the box so it keeps moving
+            startPoint.x = Math.random() * (canvas.width - 25);
+            startPoint.y = Math.random() * (canvas.height - 25);
+            moveDirection.x = (Math.random() * 2 - 1) * 3;
+            moveDirection.y = (Math.random() * 2 - 1) * 3;
+
+            starsHit += 10;      // box hit = +10
+            playSound(boxHitSound);
             continue;
         }
 
-        for(var j = 0; j<stars.length; j++){
-            if(shipToStarCollision(bullet, stars[j])){
-                bullets.splice(i,1);
+        for (var j = 0; j < stars.length; j++) {
+            if (shipToStarCollision(bullet, stars[j])) {
+                bullets.splice(i, 1);
                 stars[j].x = Math.random() * canvas.width;
                 stars[j].y = -(Math.random() * canvas.height);
+
+                starsHit++;
+                playSound(hitSound);
                 continue;
             }
         }
@@ -337,7 +328,6 @@ function game(){
         ctx.fillStyle = bullet.color;
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     }
->>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
     //Draws Ship and box
     ctx.fillStyle = boxColor;
     ctx.fillRect(startPoint.x, startPoint.y, 25,25);
@@ -348,6 +338,14 @@ function game(){
     ctx.fillStyle = "White";
     ctx.font = "30px Arial";
     ctx.fillText(`Score: ${score}`,30,80);
+
+   //Bullets that connected
+    ctx.fillStyle = "White";
+    ctx.font = "30px Arial";
+    ctx.fillText(`Stars Hit: ${starsHit}`,600,80);
+
+
+
 }
 
 function shipToStarCollision(obj,star){
@@ -360,3 +358,4 @@ function shipToStarCollision(obj,star){
     var dist = dx * dx + dy * dy;
     return dist <= star.radius * star.radius;
 }
+
