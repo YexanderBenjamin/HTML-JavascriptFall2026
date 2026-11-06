@@ -60,6 +60,14 @@ var d = false;
 var w = false;
 var s = false;
 var space = false;
+<<<<<<< HEAD
+=======
+
+//Add a variable for the bullets
+var bullets = [];
+var shootCooldown = 0;
+
+>>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
 
 //aslo add a varaible for the bullets.
 var bullets = [];
@@ -80,8 +88,14 @@ document.addEventListener("keydown", function(e){
     if(e.key == "s"){
         s = true;
     }
+<<<<<<< HEAD
      if(e.code == "Space"){
         space = true;
+=======
+    if(e.code === "Space"){
+        space = true;
+        e.preventDefault();
+>>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
     }
 });
 //on key released
@@ -97,6 +111,9 @@ document.addEventListener("keyup", function(e){
         w = false;
     }
     if(e.code == "Space"){
+        space = false;
+    }
+    if(e.code === "Space"){
         space = false;
     }
 });
@@ -175,6 +192,7 @@ function game(){
     shipSprite.x += shipSprite.moveX;
     shipSprite.y += shipSprite.moveY;
 
+<<<<<<< HEAD
     //bullet firing code
     if(shootCooldown > 0)
     {
@@ -193,6 +211,24 @@ function game(){
             };
             shootCooldown = 10;
         }
+=======
+    //Bullet firing code
+    if(shootCooldown > 0){
+        shootCooldown--;
+    }
+
+    if(space && shootCooldown === 0){
+        bullets.push({
+            x:shipSprite.x + 25 /2 -2,
+            y:shipSprite.y + -10,
+            width:4,
+            height:10,
+            speed:8,
+            color:"white"
+        });
+        shootCooldown = 10;
+    }
+>>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
 
     //Draws Background
     ctx.fillStyle = "black";
@@ -202,7 +238,11 @@ function game(){
         //draw all the stars
        
         //Collide with Star
+<<<<<<< HEAD
         if(shipToStarCollision(stars[i])){
+=======
+        if(shipToStarCollision(shipSprite, stars[i])){
+>>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
             shipSprite.x = canvas.width/2
             shipSprite.y = canvas.height/2 + 100;
 
@@ -220,6 +260,7 @@ function game(){
         }
     }
 
+<<<<<<< HEAD
     for(var i = bullets.length -1; i >= 0; i--)
         {
             var bullet = bullets [i]
@@ -257,6 +298,46 @@ function game(){
                 
         }
 
+=======
+    //Draw and check for bullet collsion
+    for(var i = bullets.length -1; i>=0; i--){
+        var bullet = bullets[i];
+
+        bullet.y -= bullet.speed;
+
+        //Check for bullets that leave the screen
+        if(bullet.y + bullet.height < 0){
+            bullets.splice(i,1);
+            continue;
+        }
+
+        var hitBox = bullet.x < startPoint.x + 25 &&
+                    bullet.x + bullet.width > startPoint.x &&
+                    bullet.y < startPoint.y + 25 &&
+                    bullet.y + bullet.height > startPoint.y;
+
+        if(hitBox){
+            //remove bullet
+            bullets.splice(i, 1);
+            startPoint.x = 100000;
+            moveDirection.x = 0;
+            moveDirection.y = 0;
+            continue;
+        }
+
+        for(var j = 0; j<stars.length; j++){
+            if(shipToStarCollision(bullet, stars[j])){
+                bullets.splice(i,1);
+                stars[j].x = Math.random() * canvas.width;
+                stars[j].y = -(Math.random() * canvas.height);
+                continue;
+            }
+        }
+
+        ctx.fillStyle = bullet.color;
+        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+    }
+>>>>>>> 41d0c007a45b4e8db568355ae796e2ed0d5bb173
     //Draws Ship and box
     ctx.fillStyle = boxColor;
     ctx.fillRect(startPoint.x, startPoint.y, 25,25);
