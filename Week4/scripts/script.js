@@ -111,7 +111,7 @@ function game(){
         playSound(boxHitSound);
 
         hideBoxForDelay();
-        continue;
+        
     }
 
     // ...existing code...
