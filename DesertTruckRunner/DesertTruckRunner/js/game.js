@@ -86,6 +86,8 @@ function makeSprite(imageID, x, y, w, h, color) {
 function resetGame() {
     playerLane = 1;
     truck = makeSprite(truckImageID, laneX[playerLane], 405, 54, 82, "#c94b27");
+    truck.w = 40;
+    truck.h = 60;
     obstacles = [];
     fuelCans = [];
     bubbles = [];
@@ -101,29 +103,85 @@ function resetGame() {
     lastTime = 0;
     gameState = "playing";
 }
+function getClearSpawnLanes() {
+    var clearLanes = [];
 
-function addBarricades() {
-   
-    var blocked = [];
-    var firstLane = Math.floor(rand(0, 3));
-    blocked.push(firstLane);
+    for (var lane = 0; lane < 3; lane++) {
+        var occupied = false;
+        var lanePosition = laneX[lane];
 
-    if (Math.random() < 0.35) {
-        var secondLane = Math.floor(rand(0, 3));
-        if (secondLane !== firstLane) {
-            blocked.push(secondLane);
+        //Check obstacles
+        for (var i = 0; i < obstacles.length; i++) {
+            if (
+                obstacles[i].x === lanePosition &&
+                Math.abs(obstacles[i].y - (-40) ) < 70
+            ) {
+                occupied = true;
+            }
+        }
+        //check fuel cans
+        for (var j = 0; j < fuelCans.length; j++) {
+            if (
+                fuelCans[j].object.x === lanePosition &&
+                Math.abs(fuelCans[j].object.y - (-40)) < 70
+            ) {
+                occupied = true;
+            }
+        }
+
+        if (!occupied) {
+            clearLanes.push(lane);
         }
     }
 
+    return clearLanes;
+}
+function addBarricades() {
+    var availableLanes = getClearSpawnLanes();
+    var blocked = [];
+
+    if (availableLanes.length === 0) {
+        return;
+    }
+
+    // Always spawn at least one barricade.
+    var firstIndex = Math.floor(Math.random() * availableLanes.length);
+    blocked.push(availableLanes.splice(firstIndex, 1)[0]);
+
+    // Sometimes spawn a second barricade.
+    if (availableLanes.length > 0 && Math.random() < 0.35) {
+        var secondIndex = Math.floor(Math.random() * availableLanes.length);
+        blocked.push(availableLanes.splice(secondIndex, 1)[0]);
+    }
+
     for (var i = 0; i < blocked.length; i++) {
-        obstacles.push(makeSprite(barricadeImageID, laneX[blocked[i]], -45, 66, 44, "#f4a52f"));
+        var barrier = makeSprite(
+            barricadeImageID,
+            laneX[blocked[i]],
+            -45,
+            66,
+            44,
+            "#f4a52f"
+        );
+
+        barrier.w = 48;
+        barrier.h = 32;
+
+        obstacles.push(barrier);
     }
 }
 
 function addFuelCan() {
-    var lane = Math.floor(rand(0, 3));
+    var availableLanes = getClearSpawnLanes();
+
+    if (availableLanes.length === 0) {
+        return;
+    }
+
+    var lane = availableLanes[Math.floor(Math.random() * availableLanes.length)];
     var isGold = Math.random() < 0.15;
     var imageID = isGold ? goldGasImageID : gasImageID;
+
     fuelCans.push({
         object: makeSprite(imageID, laneX[lane], -40, 42, 48, "#e33d32"),
         gold: isGold
@@ -131,8 +189,17 @@ function addFuelCan() {
 }
 
 function addBubble() {
-    var lane = Math.floor(rand(0, 3));
-    bubbles.push(makeSprite(bubbleImageID, laneX[lane], -40, 48, 48, "#8bdcf4"));
+    var availableLanes = getClearSpawnLanes();
+
+    if (availableLanes.length === 0) {
+        return;
+    }
+
+    var lane = availableLanes[Math.floor(Math.random() * availableLanes.length)];
+
+    bubbles.push(
+        makeSprite(bubbleImageID, laneX[lane], -40, 48, 48, "#8bdcf4")
+    );
 }
 
 function updateGame(deltaSeconds) {
@@ -156,17 +223,17 @@ function updateGame(deltaSeconds) {
 
     while (distance >= nextGasSpawn) {
         addFuelCan();
-        nextGasSpawn += 100;
+        nextGasSpawn += 150;
     }
 
     while (distance >= nextBarricadeSpawn) {
         addBarricades();
-        nextBarricadeSpawn += 42;
+        nextBarricadeSpawn += 10;
     }
 
     while (distance >= nextBubbleSpawn) {
         addBubble();
-        nextBubbleSpawn += 300;
+        nextBubbleSpawn += 350;
     }
 
     if (shieldTime > 0) {
