@@ -1,0 +1,82 @@
+DESERT TRUCK RUNNER - PSEUDOCODE
+Group Members: Emmanuel and Yexander
+
+GAME SETUP
+- Set the canvas width to 800 and height to 500.
+- Create three lanes: Left, Middle, and Right.
+- Place the truck in the Middle lane near the bottom of the screen.
+- Set the starting fuel to 250.
+- Set the maximum fuel to 250.
+- Set the distance traveled to 0 meters.
+- Set the winning distance to 1,000 meters.
+- Load the truck, barricade, regular gas, gold gas, and bubble images.
+
+STARTING THE GAME
+- Show the title screen and game instructions.
+- Wait for the player to press Space.
+- Reset the truck, fuel, distance, obstacles, and power-ups.
+- Change the game state to Playing.
+
+PLAYER MOVEMENT
+- If the player presses A or the Left Arrow, move one lane left.
+- If the player presses D or the Right Arrow, move one lane right.
+- Do not let the truck move outside the three lanes.
+- Keep the truck near the bottom of the screen.
+
+DISTANCE AND FUEL
+- Increase the distance at 10 meters per second.
+- Every time the player travels another 20 meters, remove 10 fuel.
+- Do not allow fuel to go above 250.
+- If fuel reaches 0, end the game.
+
+FUEL CONTAINERS
+- Spawn a fuel container every 100 meters.
+- Choose a random lane for the container.
+- Most containers are regular red gas cans.
+- Sometimes spawn a gold gas can instead.
+- When the truck collects a regular gas can, add 100 fuel.
+- When the truck collects a gold gas can, refill fuel to 250.
+- Remove the collected fuel container from the screen.
+
+BARRICADES
+- Begin spawning barricades at 100 meters.
+- Continue spawning barricades at regular distance intervals.
+- Choose random lanes for barricades.
+- Never block all three lanes at once; always leave at least one lane open.
+- Move barricades toward the bottom of the screen.
+- Use the GameObject overlaps() method to check whether the truck hits a barricade.
+- If the truck hits a barricade without protection, end the game.
+
+BUBBLE POWER-UP
+- Spawn a bubble power-up occasionally.
+- When the truck collects it, activate a temporary shield.
+- The shield protects the truck from one barricade collision.
+- Remove the shield after it blocks a collision or its timer runs out.
+
+WINNING AND LOSING
+- If fuel reaches 0, show the Game Over screen.
+- If the truck hits a barricade without a shield, show the Game Over screen.
+- If the player reaches 1,000 meters, show the Win screen.
+- Allow the player to press Space to restart after winning or losing.
+
+MAIN GAME LOOP
+- Clear the previous frame.
+- Draw the desert and road.
+- Read player movement.
+- Update distance and fuel.
+- Spawn fuel cans, barricades, and power-ups when their distance targets are reached.
+- Move objects down the screen.
+- Check collisions with overlaps().
+- Remove objects that leave the screen or are collected.
+- Check win and game-over conditions.
+- Draw the truck, objects, distance, fuel bar, and messages.
+- Repeat about 60 times per second.
+
+
+IMAGE SETUP (TEACHER'S REQUIRED METHOD)
+- Keep the default Mr. T. image in index.html with id="default".
+- Add each transparent PNG to index.html with its own id (avatar, barricade, gas, gold-gas, bubble).
+- Create each object by passing its image ID into GameObject, such as new GameObject("#avatar").
+- Set the object's img.w and img.h (or img.scale.x and img.scale.y) to control its displayed size.
+- Draw image objects with the object's .graphic() method. Do not call drawImage() from game.js.
+- The GameObject class uses the canvas drawing method internally to display the selected image.

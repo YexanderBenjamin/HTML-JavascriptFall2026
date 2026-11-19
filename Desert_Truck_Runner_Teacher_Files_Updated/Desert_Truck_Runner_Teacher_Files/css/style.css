@@ -1,0 +1,135 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 28px;
+    background: #f2e5cc;
+    color: #33261c;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.page {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.eyebrow {
+    margin: 0 0 6px;
+    color: #a45e28;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(30px, 5vw, 48px);
+}
+
+.subtitle {
+    margin: 8px 0 0;
+    color: #6e5946;
+}
+
+.controls-card, .info-panel, .game-panel {
+    border: 2px solid #c9a77c;
+    border-radius: 14px;
+    background: #fffaf1;
+    box-shadow: 0 8px 22px rgba(73, 47, 23, 0.10);
+}
+
+.controls-card {
+    display: grid;
+    gap: 8px;
+    min-width: 220px;
+    padding: 14px 18px;
+    font-size: 14px;
+}
+
+.controls-card strong {
+    color: #a45e28;
+    letter-spacing: 1px;
+}
+
+kbd {
+    display: inline-block;
+    min-width: 24px;
+    padding: 3px 6px;
+    border: 1px solid #bda17e;
+    border-radius: 5px;
+    background: #f4e6d1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.game-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 800px) minmax(230px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.game-panel {
+    overflow: hidden;
+    padding: 12px;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid #4b3829;
+    border-radius: 7px;
+    background: #d7b477;
+}
+
+.under-canvas {
+    padding: 10px 4px 2px;
+    color: #725b43;
+    font-size: 13px;
+    text-align: center;
+}
+
+.info-panel {
+    padding: 20px;
+}
+
+.info-panel h2 {
+    margin-top: 0;
+    color: #9a5526;
+}
+
+.info-panel p, .info-panel li {
+    line-height: 1.55;
+}
+
+.info-panel li {
+    margin-bottom: 8px;
+}
+
+.small-note {
+    color: #776654;
+    font-size: 12px;
+}
+
+@media (max-width: 900px) {
+    body { padding: 14px; }
+    header { align-items: flex-start; flex-direction: column; }
+    .game-layout { grid-template-columns: 1fr; }
+}
+
+
+/* Image elements are kept in the HTML for GameObject to querySelect. */
+#game-assets { display: none; }

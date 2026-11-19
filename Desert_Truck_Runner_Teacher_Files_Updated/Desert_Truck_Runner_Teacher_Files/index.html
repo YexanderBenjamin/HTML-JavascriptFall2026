@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desert Truck Runner</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="page">
+        <header>
+            <div>
+                <p class="eyebrow">Yexander and Emmanuel</p>
+                <h1>Desert Truck Runner</h1>
+                <p class="subtitle">Have fun :D</p>
+            </div>
+            <div class="controls-card">
+                <strong>CONTROLS</strong>
+                <span><kbd>A</kbd> / <kbd>←</kbd> Move left</span>
+                <span><kbd>D</kbd> / <kbd>→</kbd> Move right</span>
+                <span><kbd>Space</kbd> Start / restart</span>
+            </div>
+        </header>
+
+        <section class="game-layout">
+            <div class="game-panel">
+                <canvas width="800" height="500"></canvas>
+            </div>
+            <aside class="info-panel">
+                <h2>How to Play</h2>
+                <p>Move between the three lanes to avoid barricades and collect fuel.</p>
+                <ul>
+                    <li>Regular fuel cans add 100 fuel.</li>
+                    <li>Gold fuel cans refill your tank to 250.</li>
+                    <li>Your tank loses 10 fuel every 20 meters.</li>
+                    <li>A bubble protects you from one barricade hit for a short time.</li>
+                    <li>Reach 1,000 meters to win.</li>
+                </ul>
+            </aside>
+        </section>
+    </main>
+
+    <div id="game-assets" aria-hidden="true">
+        <img src="images/mrt.jpg" alt="Default teacher image" id="default">
+        <img src="images/truck.png" alt="Player truck" id="avatar">
+        <img src="images/barricade.png" alt="Road barricade" id="barricade">
+        <img src="images/gas.png" alt="Regular fuel can" id="gas">
+        <img src="images/gold-gas.png" alt="Gold fuel can" id="gold-gas">
+        <img src="images/bubble.png" alt="Bubble shield" id="bubble">
+    </div>
+
+   
+    <script src="js/controls.js"></script>
+    <script src="js/GameObject.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
