@@ -54,6 +54,11 @@ var nextGasSpawn = 100;
 var nextBarricadeSpawn = 100;
 var nextBubbleSpawn = 300;
 var scrollSpeed = 3.2;
+var duneOffset = -180;
+var laneMarkOffset = 0;
+var laneDashLength = 24;
+var laneDashGap = 22;
+var laneDashCycle = laneDashLength + laneDashGap;
 
 var gameState = "start"; // start, playing, gameover, win
 var shieldTime = 0;
@@ -98,6 +103,8 @@ function resetGame() {
     nextBarricadeSpawn = 100;
     nextBubbleSpawn = 300;
     shieldTime = 0;
+    laneMarkOffset = 0;
+    duneOffset = -180;
     distanceRemainder = 0;
     elapsedTime = 0;
     lastTime = 0;
@@ -203,6 +210,8 @@ function addBubble() {
 }
 
 function updateGame(deltaSeconds) {
+    laneMarkOffset = (laneMarkOffset + scrollSpeed ) ;
+
     if (a && playerLane > 0) {
         playerLane--;
         a = false;
@@ -215,6 +224,12 @@ function updateGame(deltaSeconds) {
     }
 
     distance += 10 * deltaSeconds;
+
+    duneOffset += scrollSpeed * 0.35;
+
+    if (duneOffset > c.height + 180) {
+        duneOffset = -180;
+    }
 
     while (distance >= nextFuelLoss) {
         fuel -= 10;
@@ -294,36 +309,52 @@ function drawRoad() {
     ctx.fillStyle = "#d8b477";
     ctx.fillRect(0, 0, c.width, c.height);
 
-    // Distant sand dunes
+    // Single looping distant sand dune
     ctx.fillStyle = "#c99d5d";
     ctx.beginPath();
-    ctx.moveTo(0, 110);
-    ctx.quadraticCurveTo(130, 40, 260, 115);
-    ctx.quadraticCurveTo(410, 35, 560, 112);
-    ctx.quadraticCurveTo(690, 45, 800, 110);
-    ctx.lineTo(800, 180);
-    ctx.lineTo(0, 180);
+
+    ctx.moveTo(0, 110 + duneOffset);
+    ctx.quadraticCurveTo(
+        130, 40 + duneOffset,
+        260, 115 + duneOffset
+    );
+    ctx.quadraticCurveTo(
+        410, 35 + duneOffset,
+        560, 112 + duneOffset
+    );
+    ctx.quadraticCurveTo(
+        690, 45 + duneOffset,
+        800, 110 + duneOffset
+    );
+
+    ctx.lineTo(800, 180 + duneOffset);
+    ctx.lineTo(0, 180 + duneOffset);
     ctx.closePath();
     ctx.fill();
+
 
     // Road
     ctx.fillStyle = "#51483f";
     ctx.fillRect(roadLeft, 0, roadRight - roadLeft, c.height);
     ctx.fillStyle = "#e9d5a9";
+
+
+    
     ctx.fillRect(roadLeft - 7, 0, 7, c.height);
     ctx.fillRect(roadRight, 0, 7, c.height);
 
     // Dashed lane markers
     ctx.strokeStyle = "#f8e9c8";
     ctx.lineWidth = 4;
-    ctx.setLineDash([24, 22]);
     ctx.beginPath();
-    ctx.moveTo(roadLeft + (roadRight - roadLeft) / 3, 0);
-    ctx.lineTo(roadLeft + (roadRight - roadLeft) / 3, c.height);
-    ctx.moveTo(roadLeft + 2 * (roadRight - roadLeft) / 3, 0);
-    ctx.lineTo(roadLeft + 2 * (roadRight - roadLeft) / 3, c.height);
+    var firstMarkerY = laneMarkOffset % laneDashCycle;
+    for (var markerY = firstMarkerY; markerY < c.height; markerY += laneDashCycle) {
+        ctx.moveTo(roadLeft + (roadRight - roadLeft) / 3, markerY);
+        ctx.lineTo(roadLeft + (roadRight - roadLeft) / 3, markerY + laneDashLength);
+        ctx.moveTo(roadLeft + 2 * (roadRight - roadLeft) / 3, markerY);
+        ctx.lineTo(roadLeft + 2 * (roadRight - roadLeft) / 3, markerY + laneDashLength);
+    }
     ctx.stroke();
-    ctx.setLineDash([]);
 }
 
 function drawHud() {
